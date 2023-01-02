@@ -120,6 +120,21 @@ void App::processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
 
+	if (!mouseCaptured)
+	{
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
+		{
+			double newMouseX, newMouseY;
+			glfwGetCursorPos(window, &newMouseX, &newMouseY);
+
+			inputs.mouseX = newMouseX;
+			inputs.mouseY = newMouseY;
+
+			mouseCaptured = true;
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+	}
+
 	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
 	{
 		if (mouseCaptured)
@@ -255,12 +270,6 @@ void App::ImGui()
 
 		if (ImGui::Button("Perspective view"))
 			camera->setProjection(lowRenderer::ViewType::VT_PERSPECTIVE);
-
-		if (ImGui::Button("Capture mouse"))
-		{
-			mouseCaptured = true;
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		}
 
 		if (mouseCaptured)
 			ImGui::Text("Tab to un-capture");
