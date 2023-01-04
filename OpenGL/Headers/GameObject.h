@@ -51,5 +51,7 @@ namespace lowRenderer
 		myMaths::Mat4 GetGlobalTransform();
 
 		bool IsLoaded();
+
+		void LookAt(myMaths::Float3 targ);
 	};
 }

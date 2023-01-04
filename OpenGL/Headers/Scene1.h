@@ -7,5 +7,7 @@ namespace Resource
 	{
 	public:
 		void Init(Resource::ResourceManager& resourcesManager) override;
+
+		void Update() override;
 	};
 }

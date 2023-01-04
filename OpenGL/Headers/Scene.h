@@ -52,5 +52,8 @@ namespace Resource
 		void Reload(Resource::ResourceManager& resourcesManager);
 
 		bool CheckLoadedModel();
+
+		virtual void Update() {};
+
 	};
 }
