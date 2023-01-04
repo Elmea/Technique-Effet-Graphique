@@ -95,6 +95,7 @@ void App::Update()
 		processInput(window);
 		NewFrame(mouseCaptured);
 
+
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -102,9 +103,12 @@ void App::Update()
 
 		scenes[currentScene]->CheckLoadedModel();
 
+		scenes[currentScene]->Update();
+
 		camera->CalcVP();
 		camera->Update(inputs);
 		scenes[currentScene]->Render(camera);
+
 
 		ImGui();
 

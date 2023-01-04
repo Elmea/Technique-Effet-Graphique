@@ -64,8 +64,8 @@ namespace myMaths
         Float3 result;
 
         result.x = y * other.z - z * other.y;
-        result.y = x * other.z - z * other.x;
-        result.z = y * other.x - x * other.y;
+        result.y = z * other.x - x * other.z;
+        result.z = x * other.y - y * other.x;
 
         return result;
     }
@@ -236,6 +236,17 @@ namespace myMaths
             }
         }
     }
+
+    Float3 Mat4::ExtractPosition()
+    {
+        Float3 pos;
+
+        pos.x = mat[0][3];
+        pos.y = mat[1][3];
+        pos.z = mat[2][3];
+        return pos;
+    }
+
 
     Float4 Mat4::operator*(const Float4& ft4)
     {
@@ -602,9 +613,9 @@ namespace myMaths
         float x, y, z;
 
         x = atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
-        y = atan2(-rotationMatrix.mat[2][0], sqrt(rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]));
+        y = atan2(-rotationMatrix.mat[2][0], sqrt((double)rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + (double)rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]));
         z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
 
-        return { x, y, z };
+        return { (float)(RAD2DEG * x), (float)(RAD2DEG * y), (float)(RAD2DEG * z) };
     }
 }

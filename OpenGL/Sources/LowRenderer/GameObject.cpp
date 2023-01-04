@@ -82,22 +82,25 @@ void GameObject::SetParent(GameObject* parent)
 void GameObject::LookAt(myMaths::Float3 targ)
 {
 
-	myMaths::Float3 forward = (targ - position).getNormalized();
-	myMaths::Float3 worldUp{ 0,1,0 };
-	myMaths::Float3 right = (forward.crossProduct(worldUp)).getNormalized();
-	myMaths::Float3 up = right.crossProduct(forward);
+	myMaths::Float3 eyePos{ GetGlobalTransform().ExtractPosition() };
 
-	forward = -forward;
+	glm::mat4 mat;
+	mat = glm::lookAt(glm::vec3{ eyePos.x,eyePos.y,eyePos.z }, 
+					  glm::vec3{ targ.x,targ.y,targ.z },
+					  glm::vec3{ 0,1,0 });
 
-	myMaths::Mat4 view = {
-	  right.x, right.y, right.z, -right.dotProduct(position),
-	  up.x, up.y, up.z, -up.dotProduct(position),
-	  forward.x, forward.y, forward.z, -forward.dotProduct(position),
-	  0, 0, 0, 1
+
+	myMaths::Mat4 finalMat
+	{
+		{
+			mat[0][0],mat[0][1],mat[0][2],mat[0][3],
+			mat[1][0],mat[1][1],mat[1][2],mat[1][3],
+			mat[2][0],mat[2][1],mat[2][2],mat[2][3],
+			mat[3][0],mat[3][1],mat[3][2],mat[3][3]
+		}
 	};
 
-	forward = -forward;
-
+	rotation = myMaths::GetAngleFromMat(finalMat);
 }
 
 

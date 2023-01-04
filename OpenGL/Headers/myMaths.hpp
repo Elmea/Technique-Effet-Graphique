@@ -143,7 +143,9 @@ namespace myMaths
         static Mat4 getIndentityMatrix();
 
         Float4 getMatLine(int index);
+        Float3 ExtractPosition();
     };
+
 
     Mat4 operator*(const float& mult, const Mat4& matrix);
     Float4 operator*(const Float4& ft4, const Mat4& matrix);
