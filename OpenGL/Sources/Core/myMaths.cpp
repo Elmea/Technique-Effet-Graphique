@@ -599,23 +599,11 @@ namespace myMaths
 
     Float3 GetAngleFromMat(const Mat4& rotationMatrix)
     {
-        float sy = sqrt(rotationMatrix.mat[0][0] * rotationMatrix.mat[0][0] + rotationMatrix.mat[1][0] * rotationMatrix.mat[1][0]);
-
-        bool singular = sy < 1e-6; // If
-
         float x, y, z;
-        if (!singular)
-        {
-            x = atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
-            y = atan2(-rotationMatrix.mat[2][0], sy);
-            z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
-        }
-        else
-        {
-            x = atan2(-rotationMatrix.mat[1][2], rotationMatrix.mat[1][1]);
-            y = atan2(-rotationMatrix.mat[2][0], sy);
-            z = 0;
-        }
+
+        x = atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
+        y = atan2(-rotationMatrix.mat[2][0], sqrt(rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]);
+        z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
 
         return { x, y, z };
     }
