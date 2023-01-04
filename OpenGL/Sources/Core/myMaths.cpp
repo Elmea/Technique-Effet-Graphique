@@ -612,9 +612,24 @@ namespace myMaths
     {
         float x, y, z;
 
-        x = atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
-        y = atan2(-rotationMatrix.mat[2][0], sqrt((double)rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + (double)rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]));
-        z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
+        y = atan2(-rotationMatrix.mat[2][0], -sqrt((double)rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + (double)rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]));
+
+            x = -atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
+            z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
+        
+        
+        if (y < 1)
+        {
+            x = -x;
+            z = -z;
+        }
+
+        if (z == 0)
+        {
+            y = -y;
+            x = -x;
+        } 
+
 
         return { (float)(RAD2DEG * x), (float)(RAD2DEG * y), (float)(RAD2DEG * z) };
     }
