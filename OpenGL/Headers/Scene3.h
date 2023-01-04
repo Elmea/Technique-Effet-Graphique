@@ -3,11 +3,9 @@
 
 namespace Resource
 {
-	class Scene1 : public Scene
+	class Scene3 : public Scene
 	{
 	public:
 		void Init(Resource::ResourceManager& resourcesManager) override;
-
-		void Update() override;
 	};
 }

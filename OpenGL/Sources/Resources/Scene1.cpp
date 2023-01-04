@@ -2,6 +2,12 @@
 
 using namespace Resource;
 
+
+void Scene1::Update()
+{
+	objects[4]
+}
+
 void Scene1::Init(Resource::ResourceManager& resourcesManager) 
 {
 	Clear();

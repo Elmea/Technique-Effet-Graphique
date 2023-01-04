@@ -79,6 +79,29 @@ void GameObject::SetParent(GameObject* parent)
 	isChild = true;
 }
 
+void GameObject::LookAt(myMaths::Float3 targ)
+{
+
+	myMaths::Float3 forward = (targ - position).getNormalized();
+	myMaths::Float3 worldUp{ 0,1,0 };
+	myMaths::Float3 right = (forward.crossProduct(worldUp)).getNormalized();
+	myMaths::Float3 up = right.crossProduct(forward);
+
+	forward = -forward;
+
+	myMaths::Mat4 view = {
+	  right.x, right.y, right.z, -right.dotProduct(position),
+	  up.x, up.y, up.z, -up.dotProduct(position),
+	  forward.x, forward.y, forward.z, -forward.dotProduct(position),
+	  0, 0, 0, 1
+	};
+
+	forward = -forward;
+
+}
+
+
+
 void GameObject::RemoveChild(GameObject& child)
 {
 	for (int i = 0; i < node.childs.size(); i++)
