@@ -188,4 +188,6 @@ namespace myMaths
     Float3 barrycentreF3(Float3 point1, Float3 point2, Float3 point3);
 
     Float3 calcNormal(const Float3& p1, const Float3& p2, const Float3& p3);
+
+    Float3 GetAngleFromMat(const Mat4& rotationMatrix);
 }
