@@ -602,7 +602,7 @@ namespace myMaths
         float x, y, z;
 
         x = atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
-        y = atan2(-rotationMatrix.mat[2][0], sqrt(rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]);
+        y = atan2(-rotationMatrix.mat[2][0], sqrt(rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]));
         z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
 
         return { x, y, z };
