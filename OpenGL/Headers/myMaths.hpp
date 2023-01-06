@@ -1,5 +1,8 @@
 #pragma once
 #include <stdarg.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define MY_PI 3.14159265
 #define DEG2RAD MY_PI/180
@@ -144,6 +147,11 @@ namespace myMaths
 
         Float4 getMatLine(int index);
         Float3 ExtractPosition();
+
+        Mat4 ToOrtho(float left, float right, float bottom, float top, float near, float far);
+        Mat4 LookAt(myMaths::Float3 targ);
+
+        
     };
 
 

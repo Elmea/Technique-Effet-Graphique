@@ -227,6 +227,49 @@ namespace myMaths
         }
     }
 
+
+    Mat4 Mat4::ToOrtho(float left, float right, float bottom, float top, float near, float far)
+    {
+
+        float temp[4][4] = {
+            {2.f / (right - left), 0.f, 0.f, -(right + left) / (right - left)},
+            {0.f, 2.f / (top - bottom), 0.f, -(top + bottom) / (top - bottom)},
+            {0.f, 0.f, -2.f / (far - near), -(far + near) / (far - near)},
+            {0.f, 0.f, 0.f, 1.f}
+        };
+
+        myMaths::Mat4 matOrtho; matOrtho = temp;
+        
+        return matOrtho;
+    }
+
+    Mat4 Mat4::LookAt(myMaths::Float3 targ)
+    {
+
+        myMaths::Float3 eyePos{ExtractPosition()};
+
+        glm::mat4 mat;
+
+        mat = glm::lookAt(glm::vec3{ eyePos.x,eyePos.y,eyePos.z },
+            glm::vec3{ targ.x,targ.y,targ.z },
+            glm::vec3{ 0,1,0 });
+
+
+        myMaths::Mat4 finalMat
+        {
+            {
+                mat[0][0],mat[0][1],mat[0][2],mat[0][3],
+                mat[1][0],mat[1][1],mat[1][2],mat[1][3],
+                mat[2][0],mat[2][1],mat[2][2],mat[2][3],
+                mat[3][0],mat[3][1],mat[3][2],mat[3][3]
+            }
+        };
+
+        return finalMat;
+
+    }
+
+
     void Mat4::operator=(const float matrix[4][4])
     {
         for (int i = 0; i < 4; i++)
