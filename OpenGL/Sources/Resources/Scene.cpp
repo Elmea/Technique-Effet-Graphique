@@ -1,12 +1,52 @@
 #include "Scene.h"
 #include "Debug.h"
+#include "App.h"
 
 using namespace Resource;
 
-void Scene::Render(lowRenderer::Camera* camera)
+
+void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, const Core::ShadowParameters& shadowParameters, lowRenderer::Light* light)
 {
+
+
+
+	//to depth map
+	glViewport(0, 0, shadowParameters.SHADOW_WIDTH, shadowParameters.SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowParameters.depthMapFBO);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+
+
+	//ConfigureShaderAndMatrices();
+	myMaths::Mat4 lightProjection;
+	lightProjection.ToOrtho(-10, 10, -10, 10, 1, 7.5);
+
+	myMaths::Mat4 lightView;
+
+
+	lightView = myMaths::Mat4::CreateTransformMatrix(light->getPosition(), light->getDirection(), {1,1,1});
+
+	myMaths::Mat4 lightSpaceMatrix = lightProjection * lightView;
+
+	Resource::Shader* shadowMap = (Resource::Shader*)resourcesManager.Get<Resource::Shader>("ShadowMap");
+	shadowMap->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	//set back parameters to render the scene
+	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+}
+
+void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Camera* camera, float SCR_WIDTH, float SCR_HEIGHT, Core::ShadowParameters& shadowParameters)
+{
+
 	int objectsCount = objects.size();
 	int lightsCount = lights.size();
+
+
 
 	myMaths::Mat4 VPMat = camera->getVP();
 	for (int i = 0; i < objectsCount; i++)
@@ -20,7 +60,7 @@ void Scene::Render(lowRenderer::Camera* camera)
 					lights[lightId]->SetPos(camera->position);
 					lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
 				}
-
+				RenderShadow(resourcesManager, SCR_WIDTH, SCR_HEIGHT, shadowParameters, lights[lightId]);
 				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
 			}
 		}
@@ -28,6 +68,7 @@ void Scene::Render(lowRenderer::Camera* camera)
 		objects[i]->Draw(VPMat);
 	}
 
+	
 	ImGui();
 }
 

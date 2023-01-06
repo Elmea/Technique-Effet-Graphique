@@ -9,8 +9,20 @@
 
 #include "Scene.h"
 
+
+static const unsigned int SCR_WIDTH = 1600;
+static const unsigned int SCR_HEIGHT = 1200;
+
 namespace Core
 {
+
+	struct ShadowParameters
+	{
+		unsigned int depthMapFBO;
+		const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+		unsigned int depthMap;
+	};
+
 	struct AppInitialiser
 	{
 		unsigned int widht;
@@ -36,6 +48,9 @@ namespace Core
 		GLFWwindow* window;
 
 	private:
+
+		ShadowParameters shadowParameters;
+
 		int reloadCount = 0;
 		int currentScene = 0;
 		lowRenderer::Camera* camera;
@@ -68,7 +83,7 @@ namespace Core
 	public:
 		void Init(AppInitialiser initializer);
 
-		void Update(float SCR_WIDTH, float SCR_HEIGHT);
+		void Update();
 		void processInput(GLFWwindow* window);
 
 		void SetActiveScene(int id);

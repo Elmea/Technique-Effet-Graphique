@@ -64,6 +64,24 @@ void App::Init(AppInitialiser initializer)
 	ImGui_ImplOpenGL3_Init("#version 130");
 
 	soundEngine = irrklang::createIrrKlangDevice();
+
+	
+	glGenFramebuffers(1, &shadowParameters.depthMapFBO);
+
+	glGenTextures(1, &shadowParameters.depthMap);
+	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		shadowParameters.SHADOW_WIDTH, shadowParameters.SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowParameters.depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowParameters.depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void App::ResetCamera()
@@ -80,14 +98,23 @@ void App::ResetCamera()
 }
 
 
-void App::Update(float SCR_WIDTH, float SCR_HEIGHT)
+void App::Update()
 {
 	SetActiveScene(0);
 	Core::Debug::log.Print("Je commence dessiner :D");
 
+	Resource::Shader* shadowMap = (Resource::Shader*)resourcesManager.Get<Resource::Shader>("ShadowMap");
+	if (shadowMap == nullptr)
+	{
+		shadowMap = (Resource::Shader*)resourcesManager.Create<Resource::Shader>("ShadowMap", "ShadowMap");
+		shadowMap->createShader("Resources/Shaders/lightVertexShader.glsl", "Resources/Shaders/lightFragmentShader.glsl");
+	}
+	
 	while (!glfwWindowShouldClose(window))
 	{
 		HandleLoadSpeedTest();
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// input
 		// -----
@@ -95,63 +122,8 @@ void App::Update(float SCR_WIDTH, float SCR_HEIGHT)
 		processInput(window);
 		NewFrame(mouseCaptured);
 
-
 		// render
 		// ------
-		unsigned int depthMapFBO;
-		glGenFramebuffers(1, &depthMapFBO);
-		const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-		unsigned int depthMap;
-		glGenTextures(1, &depthMap);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-			SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		//to depth map
-		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glClear(GL_DEPTH_BUFFER_BIT);
-
-		//ConfigureShaderAndMatrices();
-		myMaths::Mat4 lightProjection;
-		lightProjection.ToOrtho(-10, 10, -10, 10, 1, 7.5);
-
-		myMaths::Mat4 lightView;
-		lightView.LookAt({ 0, 0, 0 });
-
-		myMaths::Mat4 lightSpaceMatrix = lightProjection * lightView;
-
-		/*
-		simpleDepthShader.use();
-		glUniformMatrix4fv(lightSpaceMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-
-		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-		glClear(GL_DEPTH_BUFFER_BIT);
-		RenderScene(simpleDepthShader);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		*/
-		//RenderScene();
-		
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-
-		//the scene
-		glViewport(0, 0, SCR_WIDTH,SCR_HEIGHT);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		scenes[currentScene]->CheckLoadedModel();
 
@@ -159,8 +131,7 @@ void App::Update(float SCR_WIDTH, float SCR_HEIGHT)
 
 		camera->CalcVP();
 		camera->Update(inputs);
-		scenes[currentScene]->Render(camera);
-
+		scenes[currentScene]->Render(resourcesManager,camera, SCR_WIDTH, SCR_HEIGHT, shadowParameters);
 
 		ImGui();
 

@@ -52,8 +52,7 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 }
 
 // settings
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 1200;
+
 
 int main()
 {
@@ -85,7 +84,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	app.Update(SCR_WIDTH,SCR_HEIGHT);
+	app.Update();
 
 	// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

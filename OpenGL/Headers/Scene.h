@@ -8,6 +8,12 @@
 #include "Light.h"
 #include "Camera.h"
 
+namespace Core
+{
+
+	struct ShadowParameters;
+}
+
 
 namespace Resource
 {
@@ -32,7 +38,7 @@ namespace Resource
 
 		std::string name = "New Scene";
 
-		void Render(lowRenderer::Camera* camera);
+		void Render(Resource::ResourceManager& resourcesManager, lowRenderer::Camera* camera, const float SCR_WIDTH , const float SCR_HEIGHT, Core::ShadowParameters& shadowParameters);
 
 		int GetObjectCount() { return objects.size(); }
 		int GetLightCount() { return lights.size(); }
@@ -46,6 +52,7 @@ namespace Resource
 
 		~Scene();
 
+		void RenderShadow(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, const Core::ShadowParameters& shadowParameters, lowRenderer::Light* light);
 		
 		virtual void Init(Resource::ResourceManager& resourcesManager) = 0;
 
