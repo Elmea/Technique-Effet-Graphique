@@ -1,5 +1,6 @@
 #include <myMaths.hpp>
 #include <math.h>
+#include "Debug.h"
 
 namespace myMaths
 {
@@ -656,24 +657,28 @@ namespace myMaths
         float x, y, z;
 
         y = atan2(-rotationMatrix.mat[2][0], -sqrt((double)rotationMatrix.mat[2][1] * rotationMatrix.mat[2][1] + (double)rotationMatrix.mat[2][2] * rotationMatrix.mat[2][2]));
-
-            x = -atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
-            z = atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
         
-        
-        if (y < 1)
+        if (y == (float)(MY_PI / 2.f) || y == (float)(-MY_PI / 2.f))
         {
-            x = -x;
-            z = -z;
+            if (y < 0)
+                x = atan2(rotationMatrix.mat[0][1], -rotationMatrix.mat[1][1]);
+            else
+                x = -atan2(rotationMatrix.mat[0][1], -rotationMatrix.mat[1][1]);
+            
+            z = MY_PI;
         }
-
-        if (z == 0)
+        else
         {
-            y = -y;
-            x = -x;
-        } 
+            x = atan2(rotationMatrix.mat[2][1], rotationMatrix.mat[2][2]);
+            z = -atan2(rotationMatrix.mat[1][0], rotationMatrix.mat[0][0]);
 
-
+            if (z == 0)
+            {
+                y = -y;
+                x = -x;
+            } 
+        }
+       
         return { (float)(RAD2DEG * x), (float)(RAD2DEG * y), (float)(RAD2DEG * z) };
     }
 }
