@@ -52,14 +52,14 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 }
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 1200;
 
 int main()
 {
 	Core::AppInitialiser init =
 	{
-		1600, 1200,
+		SCR_WIDTH, SCR_HEIGHT,
 		4, 5,
 		"Modern OpenGL",
 		framebuffer_size_callback,
@@ -85,7 +85,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-	app.Update();
+	app.Update(SCR_WIDTH,SCR_HEIGHT);
 
 	// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);

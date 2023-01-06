@@ -68,7 +68,7 @@ namespace Core
 	public:
 		void Init(AppInitialiser initializer);
 
-		void Update();
+		void Update(float SCR_WIDTH, float SCR_HEIGHT);
 		void processInput(GLFWwindow* window);
 
 		void SetActiveScene(int id);
