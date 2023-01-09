@@ -12,10 +12,13 @@ out vec4 FragPosLightSpace;
 uniform mat4 model;
 uniform mat4 VP;
 uniform mat4 lightSpaceMatrix;
+uniform vec3 offsets[100];
 
 void main()
 {
-	gl_Position = VP * model * vec4(aPos, 1.0);
+	vec3 offset = offsets[gl_InstanceID];
+
+	gl_Position = VP * model * vec4(aPos+offset, 1.0);
 	fragPos = model * vec4(aPos, 1.0);
 	TexCoord = aTexCoord;
 	normal = vec3(mat3(model) * aNormal);

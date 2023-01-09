@@ -42,6 +42,7 @@ namespace lowRenderer
 		Resource::Shader* getShader() { return mesh->Shader(); }
 
 		void Draw(myMaths::Mat4& VPMatrix);
+		void DrawInstancing(myMaths::Mat4& VPMatrix, int size);
 
 		void SetParent(GameObject* parent);
 		void AddChild(GameObject& child);

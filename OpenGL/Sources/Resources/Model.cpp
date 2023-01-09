@@ -234,12 +234,17 @@ void Model::Unload()
 	glDeleteBuffers(1, &EBO);
 }
 
+void Model::DrawInstancing(int size)
+{
+	glBindVertexArray(VAO);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, indexCount, 1000);
+	glBindVertexArray(0);
+}
+
 void Model::Draw()
 {
 	glBindVertexArray(VAO);
-
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-
 	glBindVertexArray(0);
 }
 

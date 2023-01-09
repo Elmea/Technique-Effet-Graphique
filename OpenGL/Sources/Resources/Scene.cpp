@@ -40,6 +40,7 @@ void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const floa
 
 }
 
+
 void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Camera* camera, float SCR_WIDTH, float SCR_HEIGHT, Core::ShadowParameters& shadowParameters)
 {
 
@@ -49,6 +50,8 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 
 
 	myMaths::Mat4 VPMat = camera->getVP();
+
+	/*
 	for (int i = 0; i < objectsCount; i++)
 	{
 		if (objects[i]->GotMesh())
@@ -60,15 +63,41 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 					lights[lightId]->SetPos(camera->position);
 					lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
 				}
-				RenderShadow(resourcesManager, SCR_WIDTH, SCR_HEIGHT, shadowParameters, lights[lightId]);
+				//RenderShadow(resourcesManager, SCR_WIDTH, SCR_HEIGHT, shadowParameters, lights[lightId]);
 				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
 			}
 		}
 
 		objects[i]->Draw(VPMat);
 	}
+	*/
 
+	//Instancing test
+	myMaths::Float3 translation[1000];
+	for (int i = 0; i < 1000; i++)
+	{
+		translation[i] = myMaths::Float3(-100.0f + 3 * i, 10, 0);
+		if (objects[0]->name == "InstancedCube");
+			objects[0]->getShader()->setVec3("offsets[" + std::to_string(i) + "]", translation[i]);
+	}
 	
+
+	if (objects[0]->GotMesh())
+	{
+		for (int lightId = 0; lightId < lightsCount; lightId++)
+		{
+			if (lights[lightId]->followCamera)
+			{
+				lights[lightId]->SetPos(camera->position);
+				lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
+			}
+			lights[lightId]->Generate(objects[0]->getShader(), camera->position);
+		}
+	}
+
+	objects[0]->DrawInstancing(VPMat,1000);
+
+
 	ImGui();
 }
 

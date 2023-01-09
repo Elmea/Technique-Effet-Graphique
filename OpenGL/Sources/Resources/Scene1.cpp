@@ -5,7 +5,7 @@ using namespace Resource;
 
 void Scene1::Update()
 {
-	objects[4]->LookAt(objects[3]->GetGlobalTransform().ExtractPosition());
+	//objects[4]->LookAt(objects[3]->GetGlobalTransform().ExtractPosition());
 }
 
 void Scene1::Init(Resource::ResourceManager& resourcesManager) 
@@ -133,6 +133,13 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 	
 	// Create and add object
 	// ------------------------------------------------
+
+	lowRenderer::GameObject* instancedCube = new lowRenderer::GameObject(cubeMesh);
+	instancedCube->name = "InstancedCube";
+	instancedCube->position = myMaths::Float3();
+	AddObject(instancedCube);
+
+
 	lowRenderer::GameObject* cube = new lowRenderer::GameObject(cubeMesh);
 	cube->name = "Cube";
 	cube->position = myMaths::Float3(3.f, -1.f, 0.f);
@@ -186,5 +193,7 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 	everything->AddChild(*castle);
 	everything->AddChild(*key);
 	everything->name = "Everything";
+
 	AddObject(everything);
+
 }
