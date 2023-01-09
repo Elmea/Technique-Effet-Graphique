@@ -73,8 +73,8 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 	*/
 
 	//Instancing test
-	myMaths::Float3 translation[1000];
-	for (int i = 0; i < 1000; i++)
+	myMaths::Float3 translation[1012];
+	for (int i = 0; i < 1012; i++)
 	{
 		translation[i] = myMaths::Float3(-100.0f + 3 * i, 10, 0);
 		objects[0]->getShader()->setVec3("offsets[" + std::to_string(i) + "]", translation[i]);
@@ -94,7 +94,7 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 		}
 	}
 
-	objects[0]->DrawInstancing(VPMat,10000);
+	objects[0]->DrawInstancing(VPMat,1012);
 
 
 	ImGui();
