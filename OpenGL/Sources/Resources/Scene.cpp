@@ -77,8 +77,7 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 	for (int i = 0; i < 1000; i++)
 	{
 		translation[i] = myMaths::Float3(-100.0f + 3 * i, 10, 0);
-		if (objects[0]->name == "InstancedCube");
-			objects[0]->getShader()->setVec3("offsets[" + std::to_string(i) + "]", translation[i]);
+		objects[0]->getShader()->setVec3("offsets[" + std::to_string(i) + "]", translation[i]);
 	}
 	
 
@@ -95,7 +94,7 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 		}
 	}
 
-	objects[0]->DrawInstancing(VPMat,1000);
+	objects[0]->DrawInstancing(VPMat,10000);
 
 
 	ImGui();

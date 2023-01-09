@@ -12,7 +12,7 @@ out vec4 FragPosLightSpace;
 uniform mat4 model;
 uniform mat4 VP;
 uniform mat4 lightSpaceMatrix;
-uniform vec3 offsets[100];
+uniform vec3 offsets[1000];
 
 void main()
 {
