@@ -3,6 +3,35 @@
 
 using namespace lowRenderer;
 
+Light::Light(const char* _name, lightType _type, int _id) 
+{
+	if (NextFreeTextureSlot == 0)
+		NextFreeTextureSlot = GL_TEXTURE1;
+
+	textureSlot = NextFreeTextureSlot;
+	NextFreeTextureSlot++;
+
+	name = _name;
+	type = _type; setId(_id);
+
+	glGenFramebuffers(1, &shadowParameters.depthMapFBO);
+
+	glGenTextures(1, &shadowParameters.depthMap);
+	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+		shadowParameters.SHADOW_WIDTH, shadowParameters.SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowParameters.depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowParameters.depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void Light::SetLight(colorType type, myMaths::Float3 color)
 {
 	switch (type)
@@ -31,6 +60,15 @@ void Light::SetLight(myMaths::Float3 _AmbiantColor, myMaths::Float3 _DiffuseColo
 	specularColor = _SpecularColor;
 }
 
+void Light::BindShadowMap(Resource::Shader* shader)
+{
+	if (!active)
+		return; 
+
+	glActiveTexture(textureSlot);
+	shader->setInt("Lights[" + std::to_string(id) + "].shadowMap", id);
+	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
+}
 
 void Light::Generate(Resource::Shader* shader, myMaths::Float3 viewPos)
 {

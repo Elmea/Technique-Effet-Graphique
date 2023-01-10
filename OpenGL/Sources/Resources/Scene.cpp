@@ -4,51 +4,64 @@
 
 using namespace Resource;
 
-
-void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, const Core::ShadowParameters& shadowParameters, lowRenderer::Light* light)
+void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, lowRenderer::Light* light)
 {
-
-
+	if (!light->isActive())
+		return;
 
 	//to depth map
-	glViewport(0, 0, shadowParameters.SHADOW_WIDTH, shadowParameters.SHADOW_HEIGHT);
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowParameters.depthMapFBO);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-
+	glViewport(0, 0, light->shadowParameters.SHADOW_WIDTH, light->shadowParameters.SHADOW_HEIGHT);
+	glBindFramebuffer(GL_FRAMEBUFFER, light->shadowParameters.depthMapFBO);
 
 	//ConfigureShaderAndMatrices();
 	myMaths::Mat4 lightProjection;
-	lightProjection.ToOrtho(-10, 10, -10, 10, 1, 7.5);
+	/*switch (light->getType())
+	{
+	case lowRenderer::lightType::LT_DIRECTIONAL:
+		lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 70.5);
+		break;
+	case lowRenderer::lightType::LT_POINT:
+	case lowRenderer::lightType::LT_SPOT:
+		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH * SCR_HEIGHT, 0.1, 100);
+		break;
+
+	default:
+		break;
+	}*/
+
+	lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 70.5);
 
 	myMaths::Mat4 lightView;
 
-
-	lightView = myMaths::Mat4::CreateTransformMatrix(light->getPosition(), light->getDirection(), {1,1,1});
+	lightView = myMaths::Mat4::CreateTransformMatrix(light->getPosition(), light->getDirection(), {1,1,1}).getInverseMatrix();
 
 	myMaths::Mat4 lightSpaceMatrix = lightProjection * lightView;
 
 	Resource::Shader* shadowMap = (Resource::Shader*)resourcesManager.Get<Resource::Shader>("ShadowMap");
-	shadowMap->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
+	glClear(GL_DEPTH_BUFFER_BIT);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	for (int i = 0; i < 5; i++)
+		objects[i]->DrawDiffShader(lightSpaceMatrix, *shadowMap);
 
 	//set back parameters to render the scene
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-
 }
 
-void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Camera* camera, float SCR_WIDTH, float SCR_HEIGHT, Core::ShadowParameters& shadowParameters)
+void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Camera* camera, float SCR_WIDTH, float SCR_HEIGHT)
 {
 
 	int objectsCount = objects.size();
 	int lightsCount = lights.size();
 
-
-
 	myMaths::Mat4 VPMat = camera->getVP();
+
+	for (int lightId = 0; lightId < lightsCount; lightId++)
+	{
+		RenderShadow(resourcesManager, SCR_WIDTH, SCR_HEIGHT, lights[lightId]);
+	}
+
 	for (int i = 0; i < objectsCount; i++)
 	{
 		if (objects[i]->GotMesh())
@@ -60,14 +73,13 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 					lights[lightId]->SetPos(camera->position);
 					lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
 				}
-				RenderShadow(resourcesManager, SCR_WIDTH, SCR_HEIGHT, shadowParameters, lights[lightId]);
+				lights[lightId]->BindShadowMap(objects[i]->getShader());
 				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
 			}
+
+			objects[i]->Draw(VPMat);
 		}
-
-		objects[i]->Draw(VPMat);
 	}
-
 	
 	ImGui();
 }

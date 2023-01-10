@@ -27,7 +27,7 @@ void Texture::ImgBuffer()
 {
 	ASSERT(data != nullptr, "Can't load texture")
 
-		glGenTextures(1, &texture);
+	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	if (ispng)

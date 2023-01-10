@@ -36,6 +36,22 @@ myMaths::Mat4 GameObject::GetGlobalTransform()
 	return node.globalTransform;
 }
 
+void GameObject::DrawDiffShader(myMaths::Mat4& VPMatrix, Resource::Shader& shader)
+{
+	// create model matrix
+	myMaths::Mat4 transform = GetGlobalTransform();
+
+	if (mesh != nullptr)
+	{
+		glUseProgram(shader.GetShader());
+		shader.setMat4("model", transform);
+		shader.setMat4("VP", VPMatrix);
+
+		if (mesh->Model()->IsInBuffer())
+			mesh->Model()->Draw();
+	}
+}
+
 void GameObject::Draw(myMaths::Mat4& VPMatrix)
 {
 	// create model matrix
@@ -43,6 +59,7 @@ void GameObject::Draw(myMaths::Mat4& VPMatrix)
 
 	if (mesh != nullptr)
 	{
+		glActiveTexture(GL_TEXTURE0);
 		int shaderId = mesh->Shader()->GetShader();
 		glUseProgram(shaderId);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "myMaths.hpp"
 #include "Shader.h"
+#include "ResourceManager.inl"
 
 namespace lowRenderer
 {
@@ -18,9 +19,19 @@ namespace lowRenderer
 		CT_SPECULAR
 	};
 
+	struct ShadowParameters
+	{
+		unsigned int depthMapFBO;
+		const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+		unsigned int depthMap;
+	};
+	
+	static inline GLenum NextFreeTextureSlot = 0;
+
 	class Light
 	{
 	private:
+
 		int id;
 
 		bool active = true;
@@ -43,10 +54,14 @@ namespace lowRenderer
 
 		lightType type;
 
+		GLenum textureSlot;
+
 	public:
 		std::string name;
 
-		Light(const char* _name, lightType _type, int _id) { name = _name; type = _type; setId(_id); }
+		ShadowParameters shadowParameters;
+
+		Light(const char* _name, lightType _type, int _id);
 
 		void SetLight(colorType type, myMaths::Float3 color);
 		void SetLight(myMaths::Float3 _AmbiantColor, myMaths::Float3 _DiffuseColor, myMaths::Float3 _SpecularColor);
@@ -86,6 +101,6 @@ namespace lowRenderer
 		lightType getType() { return type; }
 
 		void Generate(Resource::Shader* shader, myMaths::Float3 viewPos);
-
+		void BindShadowMap(Resource::Shader* shader);
 	};
 }

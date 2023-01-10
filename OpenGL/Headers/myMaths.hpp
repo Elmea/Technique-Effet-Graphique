@@ -121,6 +121,7 @@ namespace myMaths
 
         static Mat4 getTranslation(const Float3& translation);
         static Mat4 getScale(const Float3& scale);
+        static Mat4 getProjection(const float& FOV, const float& aspect, const float& near, const float& far);
 
         float mat[4][4] = { {1.f, 0.f, 0.f, 0.f},
                            {0.f, 1.f, 0.f, 0.f},

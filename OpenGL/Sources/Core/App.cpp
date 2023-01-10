@@ -64,24 +64,6 @@ void App::Init(AppInitialiser initializer)
 	ImGui_ImplOpenGL3_Init("#version 130");
 
 	soundEngine = irrklang::createIrrKlangDevice();
-
-	
-	glGenFramebuffers(1, &shadowParameters.depthMapFBO);
-
-	glGenTextures(1, &shadowParameters.depthMap);
-	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-		shadowParameters.SHADOW_WIDTH, shadowParameters.SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, shadowParameters.depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowParameters.depthMap, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void App::ResetCamera()
@@ -131,7 +113,7 @@ void App::Update()
 
 		camera->CalcVP();
 		camera->Update(inputs);
-		scenes[currentScene]->Render(resourcesManager,camera, SCR_WIDTH, SCR_HEIGHT, shadowParameters);
+		scenes[currentScene]->Render(resourcesManager,camera, SCR_WIDTH, SCR_HEIGHT);
 
 		ImGui();
 

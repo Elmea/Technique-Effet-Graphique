@@ -9,7 +9,6 @@ in vec3 normal;
 in vec4 fragPos;
 in vec4 FragPosLightSpace;
 
-uniform sampler2D shadowMap;
 uniform sampler2D texture1;
 
 uniform vec3 lightPos;
@@ -26,6 +25,7 @@ struct Light
     float outerCutOff;
 
     mat4 Matrix;
+    sampler2D shadowMap;
 
     //  pos x   pos y   pos z   dif x
     //  dir x   dir y   dir z   dif y
@@ -35,14 +35,14 @@ struct Light
     // active : 0 inactive, 1 directional, 2 point, 3 spot
 };
 
-float ShadowCalculation(vec4 fragPosLightSpace)
+float ShadowCalculation(vec4 fragPosLightSpace, Light light)
 {
     // perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
     // transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
     // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
-    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float closestDepth = texture(light.shadowMap, projCoords.xy).r; 
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
@@ -53,7 +53,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 uniform Light Lights[MAX_LIGHTS];
 
-vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir)
+vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir, int lightId)
 {
     vec3 lightDir = normalize(-vec3(light.Matrix[0][1], light.Matrix[1][1], light.Matrix[2][1]));
     
@@ -69,7 +69,7 @@ vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir)
     vec3 diffuse = vec3(light.Matrix[3][0], light.Matrix[3][1], light.Matrix[3][2]) * diff;
     vec3 specular = vec3(light.Matrix[0][3], light.Matrix[1][3], light.Matrix[2][3]) * spec;
 
-    float shadow = ShadowCalculation(FragPosLightSpace); 
+    float shadow = ShadowCalculation(FragPosLightSpace, light); 
 
     return (ambient + (1 - shadow) * (diffuse + specular)) * light.intensity;
 }
@@ -144,7 +144,7 @@ void main()
             continue;
 
         if (Lights[i].Matrix[3][3] == 1)
-            result += CalcDirLight(Lights[i], norm, viewDir);
+            result += CalcDirLight(Lights[i], norm, viewDir, i);
 
         if (Lights[i].Matrix[3][3] == 2)
             result += CalcPointLight(Lights[i], norm, vec3(fragPos), viewDir);

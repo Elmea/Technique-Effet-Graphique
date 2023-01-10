@@ -79,6 +79,7 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 		
 	// Create and add light
 	lowRenderer::Light* dirlight = new lowRenderer::Light("Directional", lowRenderer::lightType::LT_DIRECTIONAL, 1);
+	dirlight->SetPos(myMaths::Float3(0.f, 5.0f, 0.f));
 	dirlight->SetDir(myMaths::Float3(0.f, -1.f, 0.f));
 	dirlight->SetLight(myMaths::Float3(0.5f, 0.5f, 0.5f), myMaths::Float3(1.f, 1.f, 1.f), myMaths::Float3(0.25f, 0.25f, 0.25f));
 	dirlight->SetIntensity(0.5f);

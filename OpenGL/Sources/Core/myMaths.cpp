@@ -227,7 +227,6 @@ namespace myMaths
         }
     }
 
-
     Mat4 Mat4::ToOrtho(float left, float right, float bottom, float top, float near, float far)
     {
 
@@ -241,6 +240,21 @@ namespace myMaths
         myMaths::Mat4 matOrtho; matOrtho = temp;
         
         return matOrtho;
+    }
+
+    Mat4 Mat4::getProjection(const float& FOV, const float& aspect, const float& near, const float& far)
+    {
+        float a = 1.f / tanf(DEG2RAD * FOV / 2.f);
+
+        float temp[4][4] = {
+            {a / aspect, 0.f, 0.f, 0.f},
+            {0.f, a, 0.f, 0.f},
+            {0.f, 0.f, -(far + near) / (far - near), -(2 * far * near) / (far - near)},
+            {0.f, 0.f, -1.f, 0.f}
+        };
+
+        myMaths::Mat4 projectionMatrix; projectionMatrix = temp;
+        return projectionMatrix;
     }
 
     Mat4 Mat4::LookAt(myMaths::Float3 targ)
