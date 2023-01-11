@@ -7,7 +7,7 @@ namespace lowRenderer
 {
 	enum class lightType
 	{
-		LT_DIRECTIONAL ,
+		LT_DIRECTIONAL,
 		LT_POINT,
 		LT_SPOT
 	};
@@ -43,6 +43,7 @@ namespace lowRenderer
 		myMaths::Float3 diffuseColor;
 		myMaths::Float3 specularColor;
 
+
 		float intensity = 1;
 
 		float constant = 0;
@@ -58,6 +59,8 @@ namespace lowRenderer
 
 	public:
 		std::string name;
+
+		myMaths::Mat4 lightSpaceMatrix;
 
 		ShadowParameters shadowParameters;
 

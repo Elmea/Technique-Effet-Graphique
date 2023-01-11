@@ -92,6 +92,8 @@ void Light::Generate(Resource::Shader* shader, myMaths::Float3 viewPos)
 
 	if (active)
 	{
+		shader->setMat4("lightSpaceMatrix[" + i + "]", lightSpaceMatrix);
+
 		switch (type)
 		{
 		case lowRenderer::lightType::LT_DIRECTIONAL:

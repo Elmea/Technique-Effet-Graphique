@@ -166,6 +166,12 @@
     <None Include="Resources\Shaders\fragmentShader.glsl">
       <Filter>Fichiers de ressources</Filter>
     </None>
+    <None Include="Resources\Shaders\lightFragmentShader.glsl">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
+    <None Include="Resources\Shaders\lightVertexShader.glsl">
+      <Filter>Fichiers de ressources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Shaders\vertexShader.glsl">

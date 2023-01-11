@@ -61,6 +61,7 @@ namespace myMaths
 
         Float3 getNormalized();
         bool operator==(Float3 other) { return (x <= other.x + FLOATCOMPACCURATE && x >= other.x - FLOATCOMPACCURATE) && (y <= other.y + FLOATCOMPACCURATE && y >= other.y - FLOATCOMPACCURATE) && (z <= other.z + FLOATCOMPACCURATE && z >= other.z - FLOATCOMPACCURATE); }
+        static Float3 dirToEuler(Float3 direction, const Float3& up = (0, 1, 0));
     };
 
     inline bool operator==(const myMaths::Float3& f1, const myMaths::Float3& f2)
@@ -151,8 +152,6 @@ namespace myMaths
 
         Mat4 ToOrtho(float left, float right, float bottom, float top, float near, float far);
         Mat4 LookAt(myMaths::Float3 targ);
-
-        
     };
 
 

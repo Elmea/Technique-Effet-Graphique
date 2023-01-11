@@ -130,7 +130,16 @@ namespace myMaths
         return { x / mag, y / mag, z / mag };
     }
 
+    Float3 Float3::dirToEuler(Float3 direction, const Float3& up)
+    {
+        Float3 euler{0, 0, 0};
+        Float3 dir = direction.getNormalized();
 
+        euler.y = atan2(dir.x, dir.z);
+        euler.x = atan2(dir.y, sqrtf(dir.x * dir.x + dir.z * dir.z));
+
+        return euler;
+    }
 
     // ----------------------------[Float 4]----------------------------
 

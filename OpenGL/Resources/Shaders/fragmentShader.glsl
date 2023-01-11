@@ -7,7 +7,7 @@ out vec4 FragColor;
 in vec2 TexCoord;
 in vec3 normal;
 in vec4 fragPos;
-in vec4 FragPosLightSpace;
+in vec4 FragPosLightSpace[MAX_LIGHTS];
 
 uniform sampler2D texture1;
 
@@ -24,8 +24,9 @@ struct Light
     float cutOff;
     float outerCutOff;
 
-    mat4 Matrix;
     sampler2D shadowMap;
+
+    mat4 Matrix;
 
     //  pos x   pos y   pos z   dif x
     //  dir x   dir y   dir z   dif y
@@ -53,7 +54,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, Light light)
 
 uniform Light Lights[MAX_LIGHTS];
 
-vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir, int lightId)
+vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace)
 {
     vec3 lightDir = normalize(-vec3(light.Matrix[0][1], light.Matrix[1][1], light.Matrix[2][1]));
     
@@ -69,12 +70,12 @@ vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir, int lightId)
     vec3 diffuse = vec3(light.Matrix[3][0], light.Matrix[3][1], light.Matrix[3][2]) * diff;
     vec3 specular = vec3(light.Matrix[0][3], light.Matrix[1][3], light.Matrix[2][3]) * spec;
 
-    float shadow = ShadowCalculation(FragPosLightSpace, light); 
+    float shadow = ShadowCalculation(fragPosLightSpace, light); 
 
     return (ambient + (1 - shadow) * (diffuse + specular)) * light.intensity;
 }
 
-vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace)
 {
     vec3 lightDir = normalize(vec3(light.Matrix[0][0], light.Matrix[1][0], light.Matrix[2][0]) - fragPos);
 
@@ -99,12 +100,12 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation;
     specular *= attenuation;
 
-    float shadow = ShadowCalculation(FragPosLightSpace, light); 
+    float shadow = ShadowCalculation(fragPosLightSpace, light); 
 
     return (ambient + (1 - shadow) * (diffuse + specular)) * light.intensity;
 }
 
-vec3 CalcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir, vec4 fragPosLightSpace)
 {
     vec3 lightDir = normalize(vec3(light.Matrix[0][0], light.Matrix[1][0], light.Matrix[2][0]) - fragPos);
 
@@ -133,7 +134,7 @@ vec3 CalcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
 
-    float shadow = ShadowCalculation(FragPosLightSpace, light); 
+    float shadow = ShadowCalculation(fragPosLightSpace, light); 
 
     return (ambient + (1 - shadow) * (diffuse + specular)) * light.intensity;
 }
@@ -150,13 +151,13 @@ void main()
             continue;
 
         if (Lights[i].Matrix[3][3] == 1)
-            result += CalcDirLight(Lights[i], norm, viewDir, i);
+            result += CalcDirLight(Lights[i], norm, viewDir, FragPosLightSpace[i]);
 
         if (Lights[i].Matrix[3][3] == 2)
-            result += CalcPointLight(Lights[i], norm, vec3(fragPos), viewDir);
+            result += CalcPointLight(Lights[i], norm, vec3(fragPos), viewDir, FragPosLightSpace[i]);
 
         if (Lights[i].Matrix[3][3] == 3)
-            result += CalcSpotLight(Lights[i], norm, vec3(fragPos), viewDir);
+            result += CalcSpotLight(Lights[i], norm, vec3(fragPos), viewDir, FragPosLightSpace[i]);
     }
 
 

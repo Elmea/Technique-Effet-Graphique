@@ -195,6 +195,8 @@
   <ItemGroup>
     <None Include="Headers\ResourceManager.inl" />
     <None Include="Resources\Shaders\fragmentShader.glsl" />
+    <None Include="Resources\Shaders\lightFragmentShader.glsl" />
+    <None Include="Resources\Shaders\lightVertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Shaders\vertexShader.glsl" />

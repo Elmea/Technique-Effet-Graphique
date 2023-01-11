@@ -32,18 +32,17 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 
 	lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 10);
 
-	myMaths::Mat4 lightView;
+	myMaths::Float3 rotation = myMaths::Float3::dirToEuler(light->getDirection());
+	myMaths::Mat4 lightView = myMaths::Mat4::getTranslation(light->getPosition()) * myMaths::Mat4::getRotationY(rotation.y) * myMaths::Mat4::getRotationX(rotation.x) * myMaths::Mat4::getRotationZ(rotation.z) * myMaths::Mat4::getScale({ 1,1,1 });
 
-	lightView = myMaths::Mat4::CreateTransformMatrix(light->getPosition(), light->getDirection(), {1,1,1}).getInverseMatrix();
-
-	myMaths::Mat4 lightSpaceMatrix = lightProjection * lightView;
+	light->lightSpaceMatrix = (lightProjection * lightView.getInverseMatrix());
 
 	Resource::Shader* shadowMap = (Resource::Shader*)resourcesManager.Get<Resource::Shader>("ShadowMap");
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 
 	for (int i = 0; i < GetObjectCount(); i++)
-		objects[i]->DrawDiffShader(lightSpaceMatrix, *shadowMap);
+		objects[i]->DrawDiffShader(light->lightSpaceMatrix, shadowMap);
 
 	//set back parameters to render the scene
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -72,8 +71,8 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 					lights[lightId]->SetPos(camera->position);
 					lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
 				}
-				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
 				lights[lightId]->BindShadowMap(objects[i]->getShader());
+				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
 			}
 
 			objects[i]->Draw(VPMat);
