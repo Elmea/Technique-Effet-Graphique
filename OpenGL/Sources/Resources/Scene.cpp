@@ -74,9 +74,17 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 
 	//Instancing test
 	myMaths::Float3 translation[1012];
+	int count = 0;
+	int nextLine = 0;
 	for (int i = 0; i < 1012; i++)
 	{
-		translation[i] = myMaths::Float3(-100.0f + 3 * i, 10, 0);
+		
+		if (count > 30)
+		{
+			count = 0; nextLine++;
+		}
+		translation[i] = myMaths::Float3(-50.0f + 3 * count, 0, -5 * nextLine);
+		count++;
 		objects[0]->getShader()->setVec3("offsets[" + std::to_string(i) + "]", translation[i]);
 	}
 	

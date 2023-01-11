@@ -237,7 +237,7 @@ void Model::Unload()
 void Model::DrawInstancing(int size)
 {
 	glBindVertexArray(VAO);
-	glDrawArraysInstanced(GL_TRIANGLES, 0, indexCount, 1000);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, indexCount, 1012);
 	glBindVertexArray(0);
 }
 
