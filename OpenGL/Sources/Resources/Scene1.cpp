@@ -163,7 +163,7 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 	AddObject(ahri);
 
 	lowRenderer::GameObject* castle = new lowRenderer::GameObject(castleMesh);
-	castle->position = myMaths::Float3(0.f, -100.f, 0.f);
+	castle->position = myMaths::Float3(0.f, -60.f, 0.f);
 	castle->name = "castle";
 	AddObject(castle);
 
