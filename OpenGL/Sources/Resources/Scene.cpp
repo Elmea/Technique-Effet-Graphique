@@ -30,7 +30,7 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 		break;
 	}*/
 
-	lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 50);
+	lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
 
 	myMaths::Float3 rotation = myMaths::Float3::dirToEuler(light->getDirection());
 	myMaths::Mat4 lightView = myMaths::Mat4::getTranslation(light->getPosition()) * myMaths::Mat4::getRotationY(rotation.y) * myMaths::Mat4::getRotationX(rotation.x) * myMaths::Mat4::getRotationZ(rotation.z) * myMaths::Mat4::getScale({ 1,1,1 });

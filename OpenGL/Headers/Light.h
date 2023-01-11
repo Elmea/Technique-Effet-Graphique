@@ -22,7 +22,7 @@ namespace lowRenderer
 	struct ShadowParameters
 	{
 		unsigned int depthMapFBO = 0;
-		const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+		const unsigned int SHADOW_WIDTH = 10240, SHADOW_HEIGHT = 10240;
 		unsigned int depthMap = 0;
 	};
 	
