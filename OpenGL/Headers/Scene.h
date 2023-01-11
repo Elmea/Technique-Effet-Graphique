@@ -45,7 +45,7 @@ namespace Resource
 
 		~Scene();
 
-		void RenderShadow(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, lowRenderer::Light* light);
+		void CreateShadowMaps(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, lowRenderer::Light* light);
 		
 		virtual void Init(Resource::ResourceManager& resourcesManager) = 0;
 

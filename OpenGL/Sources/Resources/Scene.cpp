@@ -4,7 +4,7 @@
 
 using namespace Resource;
 
-void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, lowRenderer::Light* light)
+void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const float SCR_WIDTH, const float SCR_HEIGHT, lowRenderer::Light* light)
 {
 	if (!light->isActive())
 		return;
@@ -15,21 +15,22 @@ void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const floa
 
 	//ConfigureShaderAndMatrices();
 	myMaths::Mat4 lightProjection;
-	/*switch (light->getType())
+	/*
+	switch (light->getType())
 	{
 	case lowRenderer::lightType::LT_DIRECTIONAL:
-		lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 70.5);
+		lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 10);
 		break;
 	case lowRenderer::lightType::LT_POINT:
 	case lowRenderer::lightType::LT_SPOT:
-		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH * SCR_HEIGHT, 0.1, 100);
+		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH * SCR_HEIGHT, 0.1, 10);
 		break;
 
 	default:
 		break;
 	}*/
 
-	lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 70.5);
+	lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 10);
 
 	myMaths::Mat4 lightView;
 
@@ -41,7 +42,7 @@ void Scene::RenderShadow(Resource::ResourceManager& resourcesManager, const floa
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < GetObjectCount(); i++)
 		objects[i]->DrawDiffShader(lightSpaceMatrix, *shadowMap);
 
 	//set back parameters to render the scene
@@ -58,9 +59,7 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 	myMaths::Mat4 VPMat = camera->getVP();
 
 	for (int lightId = 0; lightId < lightsCount; lightId++)
-	{
-		RenderShadow(resourcesManager, SCR_WIDTH, SCR_HEIGHT, lights[lightId]);
-	}
+		CreateShadowMaps(resourcesManager, SCR_WIDTH, SCR_HEIGHT, lights[lightId]);
 
 	for (int i = 0; i < objectsCount; i++)
 	{
@@ -73,8 +72,8 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 					lights[lightId]->SetPos(camera->position);
 					lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
 				}
-				lights[lightId]->BindShadowMap(objects[i]->getShader());
 				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
+				lights[lightId]->BindShadowMap(objects[i]->getShader());
 			}
 
 			objects[i]->Draw(VPMat);

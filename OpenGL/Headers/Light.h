@@ -21,9 +21,9 @@ namespace lowRenderer
 
 	struct ShadowParameters
 	{
-		unsigned int depthMapFBO;
+		unsigned int depthMapFBO = 0;
 		const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
-		unsigned int depthMap;
+		unsigned int depthMap = 0;
 	};
 	
 	static inline GLenum NextFreeTextureSlot = 0;

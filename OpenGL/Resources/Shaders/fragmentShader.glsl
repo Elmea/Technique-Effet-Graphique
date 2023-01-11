@@ -99,7 +99,9 @@ vec3 CalcPointLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
     diffuse *= attenuation;
     specular *= attenuation;
 
-    return (ambient + diffuse + specular) * light.intensity;
+    float shadow = ShadowCalculation(FragPosLightSpace, light); 
+
+    return (ambient + (1 - shadow) * (diffuse + specular)) * light.intensity;
 }
 
 vec3 CalcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
@@ -126,10 +128,14 @@ vec3 CalcSpotLight(Light light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 ambient = vec3(light.Matrix[0][2], light.Matrix[1][2], light.Matrix[2][2]);
     vec3 diffuse = vec3(light.Matrix[3][0], light.Matrix[3][1], light.Matrix[3][2]) * diff;
     vec3 specular = vec3(light.Matrix[0][3], light.Matrix[1][3], light.Matrix[2][3]) * spec;
+
     ambient *= attenuation * intensity;
     diffuse *= attenuation * intensity;
     specular *= attenuation * intensity;
-    return (ambient + diffuse + specular) * light.intensity;
+
+    float shadow = ShadowCalculation(FragPosLightSpace, light); 
+
+    return (ambient + (1 - shadow) * (diffuse + specular)) * light.intensity;
 }
 
 void main()

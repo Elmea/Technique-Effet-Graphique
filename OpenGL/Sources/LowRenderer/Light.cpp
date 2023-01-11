@@ -6,10 +6,10 @@ using namespace lowRenderer;
 Light::Light(const char* _name, lightType _type, int _id) 
 {
 	if (NextFreeTextureSlot == 0)
-		NextFreeTextureSlot = GL_TEXTURE1;
+		NextFreeTextureSlot = GL_TEXTURE15;
 
 	textureSlot = NextFreeTextureSlot;
-	NextFreeTextureSlot++;
+	NextFreeTextureSlot--;
 
 	name = _name;
 	type = _type; setId(_id);
@@ -65,8 +65,8 @@ void Light::BindShadowMap(Resource::Shader* shader)
 	if (!active)
 		return; 
 
-	glActiveTexture(textureSlot);
-	shader->setInt("Lights[" + std::to_string(id) + "].shadowMap", id);
+	glActiveTexture(GL_TEXTURE15);
+	shader->setInt("Lights[" + std::to_string(id) + "].shadowMap", shadowParameters.depthMap);
 	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
 }
 

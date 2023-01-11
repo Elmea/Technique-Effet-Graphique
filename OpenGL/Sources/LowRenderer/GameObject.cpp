@@ -62,7 +62,6 @@ void GameObject::Draw(myMaths::Mat4& VPMatrix)
 		glActiveTexture(GL_TEXTURE0);
 		int shaderId = mesh->Shader()->GetShader();
 		glUseProgram(shaderId);
-
 		glBindTexture(GL_TEXTURE_2D, mesh->Texture()->getTexture());
 
 		mesh->Shader()->setMat4("model", transform);
