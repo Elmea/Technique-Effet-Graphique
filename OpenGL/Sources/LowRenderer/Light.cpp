@@ -67,7 +67,7 @@ void Light::BindShadowMap(Resource::Shader* shader)
 
 	glUseProgram(shader->GetShader());
 	glActiveTexture(textureSlot);
-	shader->setInt("Lights[" + std::to_string(id) + "].shadowMap", shadowParameters.depthMap);
+	shader->setInt("Lights[" + std::to_string(id) + "].shadowMap", textureSlot - GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, shadowParameters.depthMap);
 }
 
