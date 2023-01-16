@@ -19,7 +19,7 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 	switch (light->getType())
 	{
 	case lowRenderer::lightType::LT_DIRECTIONAL:
-		lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
+		lightProjection = lightProjection.ToOrtho(-50, 50, -50, 50, 0.1, 100);
 		break;
 	case lowRenderer::lightType::LT_POINT:
 		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH / SCR_HEIGHT, 0.1, 25);
