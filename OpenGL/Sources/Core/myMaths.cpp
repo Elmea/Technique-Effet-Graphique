@@ -136,7 +136,7 @@ namespace myMaths
         Float3 dir = direction.getNormalized();
 
         euler.y = atan2(dir.x, dir.z);
-        euler.x = atan2(dir.y, sqrtf(dir.x * dir.x + dir.z * dir.z));
+        euler.x = atan2(dir.y, -sqrtf(dir.x * dir.x + dir.z * dir.z));
 
         return euler;
     }
