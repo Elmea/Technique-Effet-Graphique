@@ -15,20 +15,7 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 
 	//ConfigureShaderAndMatrices();
 	myMaths::Mat4 lightProjection;
-	/*
-	switch (light->getType())
-	{
-	case lowRenderer::lightType::LT_DIRECTIONAL:
-		lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 10);
-		break;
-	case lowRenderer::lightType::LT_POINT:
-	case lowRenderer::lightType::LT_SPOT:
-		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH * SCR_HEIGHT, 0.1, 10);
-		break;
 
-	default:
-		break;
-	}*/
 
 	lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
 
@@ -60,24 +47,51 @@ void Scene::Render(Resource::ResourceManager& resourcesManager, lowRenderer::Cam
 	for (int lightId = 0; lightId < lightsCount; lightId++)
 		CreateShadowMaps(resourcesManager, SCR_WIDTH, SCR_HEIGHT, lights[lightId]);
 
-	for (int i = 0; i < objectsCount; i++)
-	{
-		if (objects[i]->GotMesh())
-		{
-			for (int lightId = 0; lightId < lightsCount; lightId++)
-			{
-				if (lights[lightId]->followCamera)
-				{
-					lights[lightId]->SetPos(camera->position);
-					lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
-				}
-				lights[lightId]->BindShadowMap(objects[i]->getShader());
-				lights[lightId]->Generate(objects[i]->getShader(), camera->position);
-			}
 
-			objects[i]->Draw(VPMat);
+
+	
+	
+	if (name == "Instancing")
+	{
+		//Instancing test
+		myMaths::Float3 translation[1012];
+		int count = 0;
+		int nextLine = 0;
+		for (int i = 0; i < 1012; i++)
+		{
+
+			if (count > 30)
+			{
+				count = 0; nextLine++;
+			}
+			translation[i] = myMaths::Float3(-50.0f + 3 * count, 0, -5 * nextLine);
+			count++;
+			objects[0]->getShader()->setVec3("offsets[" + std::to_string(i) + "]", translation[i]);
 		}
+		objects[0]->DrawInstancing(VPMat, 1012);
 	}
+	else
+	{
+		for (int i = 0; i < objectsCount; i++)
+		{
+			if (objects[i]->GotMesh())
+			{
+				for (int lightId = 0; lightId < lightsCount; lightId++)
+				{
+					if (lights[lightId]->followCamera)
+					{
+						lights[lightId]->SetPos(camera->position);
+						lights[lightId]->SetDir(myMaths::Float3(-sinf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD), sinf(camera->rotation.x * DEG2RAD), -cosf(camera->rotation.y * DEG2RAD) * cosf(camera->rotation.x * DEG2RAD)));
+					}
+					lights[lightId]->BindShadowMap(objects[i]->getShader());
+					lights[lightId]->Generate(objects[i]->getShader(), camera->position);
+				}
+				objects[i]->Draw(VPMat);
+			}
+		}
+
+	}
+	
 	
 	ImGui();
 }

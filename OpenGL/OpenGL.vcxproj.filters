@@ -105,6 +105,9 @@
     <ClCompile Include="Sources\Core\ThreadManager.cpp">
       <Filter>Fichiers sources\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Resources\Scene3.cpp">
+      <Filter>Fichiers sources\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\RessourceManager.h">
@@ -156,6 +159,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Headers\ThreadManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Scene3.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

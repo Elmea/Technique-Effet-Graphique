@@ -72,6 +72,27 @@ void GameObject::Draw(myMaths::Mat4& VPMatrix)
 	}
 }
 
+void GameObject::DrawInstancing(myMaths::Mat4& VPMatrix, int size)
+{
+	// create model matrix
+	myMaths::Mat4 transform = GetGlobalTransform();
+
+	if (mesh != nullptr)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		int shaderId = mesh->Shader()->GetShader();
+		glUseProgram(shaderId);
+		glBindTexture(GL_TEXTURE_2D, mesh->Texture()->getTexture());
+
+		mesh->Shader()->setMat4("model", transform);
+		mesh->Shader()->setMat4("VP", VPMatrix);
+
+		if (mesh->Model()->IsInBuffer())
+			mesh->Model()->DrawInstancing(size);
+	}
+}
+
+
 void GameObject::AddChild(GameObject& child)
 {
 	if (child.isChild)

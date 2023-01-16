@@ -44,7 +44,9 @@ namespace Resource
 
 		void Load(const char* fileName) override;
 		
-		void Draw();
+		void Draw(); 
+		void DrawInstancing(int size);
+
 
 		Vertex* getVertices();
 
