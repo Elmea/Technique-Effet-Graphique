@@ -1,13 +1,12 @@
 #version 330 core
 
-#define MAX_LIGHTS 8
 
 out vec4 FragColor;
 
 in vec2 TexCoord;
 in vec3 normal;
 in vec4 fragPos;
-in vec4 FragPosLightSpace[MAX_LIGHTS];
+in vec4 FragPosLightSpace;
 
 uniform sampler2D texture1;
 
@@ -64,7 +63,7 @@ float ShadowCalculation(vec4 fragPosLightSpace, Light light)
     return shadow;
 }  
 
-uniform Light Lights[MAX_LIGHTS];
+uniform Light Lights;
 
 vec3 CalcDirLight(Light light, vec3 normal, vec3 viewDir, vec4 fragPosLightSpace)
 {
@@ -156,22 +155,7 @@ void main()
     vec3 norm = normalize(normal);
     vec3 viewDir = normalize(viewPos - vec3(fragPos));
     vec3 result = vec3(0.f, 0.f, 0.f);
- 
-    for (int i = 0; i < MAX_LIGHTS; i++)
-    {
-        if (Lights[i].Matrix[3][3] == 0)
-            continue;
-
-        if (Lights[i].Matrix[3][3] == 1)
-            result += CalcDirLight(Lights[i], norm, viewDir, FragPosLightSpace[i]);
-
-        if (Lights[i].Matrix[3][3] == 2)
-            result += CalcPointLight(Lights[i], norm, vec3(fragPos), viewDir, FragPosLightSpace[i]);
-
-        if (Lights[i].Matrix[3][3] == 3)
-            result += CalcSpotLight(Lights[i], norm, vec3(fragPos), viewDir, FragPosLightSpace[i]);
-    }
-
+    result += CalcDirLight(Lights, norm, viewDir, FragPosLightSpace);
 
 	FragColor = texture(texture1, TexCoord) * vec4(result, 1.0);
 }
