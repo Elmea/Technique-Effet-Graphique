@@ -15,22 +15,24 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 
 	//ConfigureShaderAndMatrices();
 	myMaths::Mat4 lightProjection;
-	/*
+	
 	switch (light->getType())
 	{
 	case lowRenderer::lightType::LT_DIRECTIONAL:
-		lightProjection = lightProjection.ToOrtho(-10, 10, -10, 10, 0.1, 10);
+		lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
 		break;
 	case lowRenderer::lightType::LT_POINT:
+		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH / SCR_HEIGHT, 0.1, 25);
+		break;
 	case lowRenderer::lightType::LT_SPOT:
-		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH * SCR_HEIGHT, 0.1, 10);
+		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH / SCR_HEIGHT, 0.1, 25);
 		break;
 
 	default:
 		break;
-	}*/
+	}
 
-	lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
+	//lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
 
 	myMaths::Float3 rotation = myMaths::Float3::dirToEuler(light->getDirection());
 	myMaths::Mat4 lightView = myMaths::Mat4::getTranslation(light->getPosition()) * myMaths::Mat4::getRotationY(rotation.y) * myMaths::Mat4::getRotationX(rotation.x) * myMaths::Mat4::getRotationZ(rotation.z) * myMaths::Mat4::getScale({ 1,1,1 });
