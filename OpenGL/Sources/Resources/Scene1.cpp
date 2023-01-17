@@ -5,7 +5,7 @@ using namespace Resource;
 
 void Scene1::Update()
 {
-	objects[4]->LookAt(objects[3]->GetGlobalTransform().ExtractPosition());
+	objects[7]->LookAt(objects[3]->GetGlobalTransform().ExtractPosition());
 }
 
 void Scene1::Init(Resource::ResourceManager& resourcesManager) 
