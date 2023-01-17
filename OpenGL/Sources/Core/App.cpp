@@ -83,7 +83,7 @@ void App::ResetCamera()
 void App::Update()
 {
 	SetActiveScene(0);
-	Core::Debug::log.Print("Je commence dessiner :D");
+	Core::Debug::log.Print("Je commence à dessiner :D");
 
 	Resource::Shader* shadowMap = (Resource::Shader*)resourcesManager.Get<Resource::Shader>("ShadowMap");
 	if (shadowMap == nullptr)

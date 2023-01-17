@@ -7,6 +7,7 @@
 
 #include "Scene1.h"
 #include "Scene2.h"
+#include "Scene3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -78,6 +79,11 @@ int main()
 	Resource::Scene2 scene2;
 	scene2.name = "Colored SpotLight";
 	app.AddScene(&scene2);
+
+	Resource::Scene3 scene3;
+	scene3.name = "Instancing";
+	app.AddScene(&scene3);
+
 
 	// render loop
 	// -----------

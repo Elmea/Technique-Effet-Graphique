@@ -170,6 +170,7 @@
     <ClCompile Include="Sources\Resources\Scene.cpp" />
     <ClCompile Include="Sources\Resources\Scene1.cpp" />
     <ClCompile Include="Sources\Resources\Scene2.cpp" />
+    <ClCompile Include="Sources\Resources\Scene3.cpp" />
     <ClCompile Include="Sources\Resources\Shader.cpp" />
     <ClCompile Include="Sources\Resources\Texture.cpp" />
   </ItemGroup>
@@ -188,6 +189,7 @@
     <ClInclude Include="Headers\Scene.h" />
     <ClInclude Include="Headers\Scene1.h" />
     <ClInclude Include="Headers\Scene2.h" />
+    <ClInclude Include="Headers\Scene3.h" />
     <ClInclude Include="Headers\Shader.h" />
     <ClInclude Include="Headers\Texture.h" />
     <ClInclude Include="Headers\ThreadManager.h" />
