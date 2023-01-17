@@ -260,7 +260,7 @@ void Scene::ImGui()
 				{
 				case lowRenderer::lightType::LT_DIRECTIONAL:
 					name = "Direction " + lights[i]->name;
-					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -10.0f, 10.0f);
+					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -25.0f, 25.0f);
 					break;
 				case lowRenderer::lightType::LT_POINT:
 					name = "Position " + lights[i]->name;
@@ -268,7 +268,7 @@ void Scene::ImGui()
 					break;
 				case lowRenderer::lightType::LT_SPOT:
 					name = "Direction " + lights[i]->name;
-					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -10.0f, 10.0f);
+					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -25.0f, 25.0f);
 					name = "Position " + lights[i]->name;
 					ImGui::SliderFloat3(name.c_str(), &lights[i]->getPositionPtr()->x, -10.0f, 10.0f);
 					name = "Cut Off " + lights[i]->name;
