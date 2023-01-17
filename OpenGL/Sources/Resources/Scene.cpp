@@ -12,6 +12,7 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 	//to depth map
 	glViewport(0, 0, light->shadowParameters.SHADOW_WIDTH, light->shadowParameters.SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, light->shadowParameters.depthMapFBO);
+	glCullFace(GL_FRONT);
 
 	//ConfigureShaderAndMatrices();
 	myMaths::Mat4 lightProjection;
@@ -45,6 +46,7 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 		objects[i]->DrawDiffShader(light->lightSpaceMatrix, shadowMap);
 
 	//set back parameters to render the scene
+	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 }
