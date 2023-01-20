@@ -1,5 +1,5 @@
 # **Graphical Effects**
-A project by Masseteau Emma and Jammet Maël
+A project by Masseteau Nino and Jammet Maël
 
 
 ## **Instancing** 
