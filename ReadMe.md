@@ -17,7 +17,7 @@ The result is that we can render hundreds of forms (or a good number of complex 
 
 
 
-## Shadow Mapping
+## **Shadow Mapping**
 
 In the basic lighting of OpenGL there is no shadow. Light goes through objects, walls, people without being hindered.
 To fix this problem we use Shadow Mapping.
