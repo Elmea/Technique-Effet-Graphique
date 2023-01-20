@@ -65,6 +65,7 @@ namespace lowRenderer
 		ShadowParameters shadowParameters;
 
 		Light(const char* _name, lightType _type, int _id);
+		~Light();
 
 		void SetLight(colorType type, myMaths::Float3 color);
 		void SetLight(myMaths::Float3 _AmbiantColor, myMaths::Float3 _DiffuseColor, myMaths::Float3 _SpecularColor);

@@ -32,6 +32,12 @@ Light::Light(const char* _name, lightType _type, int _id)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+Light::~Light()
+{
+	glDeleteTextures(1, &shadowParameters.depthMap);
+	NextFreeTextureSlot++;
+}
+
 void Light::SetLight(colorType type, myMaths::Float3 color)
 {
 	switch (type)
