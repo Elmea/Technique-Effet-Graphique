@@ -157,5 +157,5 @@ void main()
     vec3 result = vec3(0.f, 0.f, 0.f);
     result += CalcDirLight(Lights, norm, viewDir, FragPosLightSpace);
 
-	FragColor = texture(texture1, TexCoord) * vec4(result, 1.0);
+	FragColor = texture(texture1, TexCoord);
 }
