@@ -12,12 +12,26 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 	//to depth map
 	glViewport(0, 0, light->shadowParameters.SHADOW_WIDTH, light->shadowParameters.SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, light->shadowParameters.depthMapFBO);
+	glCullFace(GL_FRONT);
 
 	//ConfigureShaderAndMatrices();
 	myMaths::Mat4 lightProjection;
+	
+	switch (light->getType())
+	{
+	case lowRenderer::lightType::LT_DIRECTIONAL:
+		lightProjection = lightProjection.ToOrtho(-50, 50, -50, 50, 0.1, 100);
+		break;
+	case lowRenderer::lightType::LT_POINT:
+		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH / SCR_HEIGHT, 0.1, 25);
+		break;
+	case lowRenderer::lightType::LT_SPOT:
+		lightProjection = myMaths::Mat4::getProjection(80, SCR_WIDTH / SCR_HEIGHT, 0.1, 25);
+		break;
 
-
-	lightProjection = lightProjection.ToOrtho(-100, 100, -100, 100, 0.1, 100);
+	default:
+		break;
+	}
 
 	myMaths::Float3 rotation = myMaths::Float3::dirToEuler(light->getDirection());
 	myMaths::Mat4 lightView = myMaths::Mat4::getTranslation(light->getPosition()) * myMaths::Mat4::getRotationY(rotation.y) * myMaths::Mat4::getRotationX(rotation.x) * myMaths::Mat4::getRotationZ(rotation.z) * myMaths::Mat4::getScale({ 1,1,1 });
@@ -32,6 +46,7 @@ void Scene::CreateShadowMaps(Resource::ResourceManager& resourcesManager, const 
 		objects[i]->DrawDiffShader(light->lightSpaceMatrix, shadowMap);
 
 	//set back parameters to render the scene
+	glCullFace(GL_BACK);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 }
@@ -245,7 +260,7 @@ void Scene::ImGui()
 				{
 				case lowRenderer::lightType::LT_DIRECTIONAL:
 					name = "Direction " + lights[i]->name;
-					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -10.0f, 10.0f);
+					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -25.0f, 25.0f);
 					break;
 				case lowRenderer::lightType::LT_POINT:
 					name = "Position " + lights[i]->name;
@@ -253,7 +268,7 @@ void Scene::ImGui()
 					break;
 				case lowRenderer::lightType::LT_SPOT:
 					name = "Direction " + lights[i]->name;
-					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -10.0f, 10.0f);
+					ImGui::SliderFloat3(name.c_str(), &lights[i]->getDirectionPtr()->x, -25.0f, 25.0f);
 					name = "Position " + lights[i]->name;
 					ImGui::SliderFloat3(name.c_str(), &lights[i]->getPositionPtr()->x, -10.0f, 10.0f);
 					name = "Cut Off " + lights[i]->name;

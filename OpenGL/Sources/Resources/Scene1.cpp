@@ -5,7 +5,7 @@ using namespace Resource;
 
 void Scene1::Update()
 {
-	objects[4]->LookAt(objects[3]->GetGlobalTransform().ExtractPosition());
+	objects[7]->LookAt(objects[3]->GetGlobalTransform().ExtractPosition());
 }
 
 void Scene1::Init(Resource::ResourceManager& resourcesManager) 
@@ -80,7 +80,7 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 	// Create and add light
 	lowRenderer::Light* dirlight = new lowRenderer::Light("Directional", lowRenderer::lightType::LT_DIRECTIONAL, 1);
 	dirlight->SetPos(myMaths::Float3(0.f, 10.0f, 0.f));
-	dirlight->SetDir(myMaths::Float3(0.f, -1.f, 0.f));
+	dirlight->SetDir(myMaths::Float3(16.f, -25.f, -20.f));
 	dirlight->SetLight(myMaths::Float3(0.5f, 0.5f, 0.5f), myMaths::Float3(1.f, 1.f, 1.f), myMaths::Float3(0.25f, 0.25f, 0.25f));
 	dirlight->SetIntensity(0.5f);
 	dirlight->setActive(true);
@@ -163,7 +163,7 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 	AddObject(ahri);
 
 	lowRenderer::GameObject* castle = new lowRenderer::GameObject(castleMesh);
-	castle->position = myMaths::Float3(0.f, -60.f, 0.f);
+	castle->position = myMaths::Float3(0.f, -50.f, 0.f);
 	castle->name = "castle";
 	AddObject(castle);
 
