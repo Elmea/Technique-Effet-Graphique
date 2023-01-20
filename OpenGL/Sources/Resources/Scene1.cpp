@@ -55,7 +55,7 @@ void Scene1::Init(Resource::ResourceManager& resourcesManager)
 
 	Resource::Model* companionModel = (Resource::Model*)resourcesManager.Get<Resource::Model>("companionModel");
 	if (companionModel == nullptr)
-		companionModel = (Resource::Model*)resourcesManager.Create<Resource::Model>("Resources/Obj/companion.obj", "companionModel");
+		companionModel = (Resource::Model*)resourcesManager.Create<Resource::Model>("Resources/Obj/companion.obj", "companionModel"); 
 
 	Resource::Model* ahriModel = (Resource::Model*)resourcesManager.Get<Resource::Model>("ahriModel");
 	if (ahriModel == nullptr)
