@@ -25,7 +25,7 @@ void Texture::Load(const char* fileName)
 
 void Texture::ImgBuffer()
 {
-	ASSERT(data != nullptr, "Can't load texture")
+	ASSERT(data != nullptr, "Can't load texture");
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);

@@ -183,7 +183,7 @@ void App::processInput(GLFWwindow* window)
 		inputs.down = false;
 
 		inputs.mouseDeltaX = 0;
-		inputs.mouseDeltaX = 0;
+		inputs.mouseDeltaY = 0;
 
 		inputs.mouseX = 0;
 		inputs.mouseY = 0;
